@@ -1,0 +1,522 @@
+-- ============ CS 4-5543 Database Systems ============
+-- ============ Project Phase ============
+-- ============ Kevin Yang ============
+-- ============ 50541650 ============
+
+
+
+
+
+
+
+----SQL implement
+--drop all the table
+drop table stockmarket;
+drop table dealer;
+drop table customer;
+drop table analyst;
+drop table company; 
+drop table focus;
+drop table belong;
+drop table placeorder;
+
+
+--create table, stockmarket
+CREATE TABLE stockmarket(
+symbol VARCHAR(30),
+stockname VARCHAR(60),
+volume INT, 
+price REAL,
+lastprice REAL,
+fiftyday_avg REAL,
+marketcap INT,
+thirtymon_avg INT,
+PRIMARY KEY(symbol)
+);
+
+--create table, dealer
+CREATE TABLE dealer(
+workerid INT,
+agentname VARCHAR(40),
+address VARCHAR(40),
+phone INT,
+PRIMARY KEY(workerid,agentname)
+);
+
+--create table, customer
+CREATE TABLE customer(
+customername VARCHAR(40),
+accountid INT,
+address VARCHAR(40)
+DEFAULT 'unknown',
+PRIMARY KEY(accountid)
+);
+
+--create table, analyst
+CREATE TABLE analyst(
+analystname VARCHAR(40),
+expertise VARCHAR(40),
+PRIMARY KEY(analystname,expertise)
+);
+
+--create table, company
+CREATE TABLE company(
+companyname VARCHAR(40),
+address VARCHAR(40),
+PRIMARY KEY(companyname)
+);
+
+--create table, focus
+CREATE TABLE focus(
+analystname VARCHAR(40),
+stockname VARCHAR(60),
+symbol VARCHAR(40),
+PRIMARY KEY(analystname,symbol)
+);
+
+--create table, belong
+CREATE TABLE belong(
+analystname VARCHAR(40),
+companyname VARCHAR(40),
+PRIMARY KEY(analystname,companyname)
+);
+
+--create table, placeorder
+CREATE TABLE placeorder(
+symbol VARCHAR(40),
+stockname VARCHAR(60),
+workerid INT,
+accountid INT
+);
+
+--input some data
+INSERT INTO stockmarket(symbol, stockname, volume, price) VALUES ('GSPC','S&P 500',2895006,2785);
+INSERT INTO stockmarket(symbol, stockname, volume, price) VALUES ('DJI','DOW 30',4381982,2559);
+INSERT INTO stockmarket(symbol, stockname, volume, price) VALUES ('IXIC','NASDAQ',2688297,7422);
+INSERT INTO stockmarket(symbol, stockname, price) VALUES ('RUT','Russell 2000',1575);
+INSERT INTO stockmarket(symbol, stockname, lastprice) VALUES ('BTCUSD=X','BTC/USD',6226.54);
+INSERT INTO stockmarket(symbol, stockname, lastprice) VALUES ('ETHUSD=X','ETH/USD',202.17);
+INSERT INTO stockmarket(symbol, stockname, lastprice) VALUES ('EURUSD=X','EUR/USD',1.156);
+INSERT INTO stockmarket(symbol, stockname, lastprice) VALUES ('JPY=X','USD/JPY',112.168);
+INSERT INTO stockmarket(symbol, stockname, lastprice) VALUES ('GBPUSD=X','GBP/USD',1.322);
+INSERT INTO stockmarket(symbol, stockname, lastprice) VALUES ('AUDUSD=X','AUD/USD',0.707);
+INSERT INTO stockmarket(symbol, stockname, lastprice) VALUES ('NZDUSD=X','NZD/USD',1.322);
+INSERT INTO stockmarket(symbol, stockname, volume, price, fiftyday_avg) VALUES ('DOD','ELEMENTS Dogs of Dow DJ HY Sel 10 TR ETF',286610,24.89,24.03);
+INSERT INTO stockmarket(symbol, stockname, volume, price, fiftyday_avg) VALUES ('PUI','Invesco DWA Utilities Momentum ETF',38200,29.40,28.86);
+INSERT INTO stockmarket(symbol, stockname, volume, price, fiftyday_avg) VALUES ('GNMA','iShares GNMA Bond ETF',471520,47.70,48.15);
+INSERT INTO stockmarket(symbol, stockname, volume, price, fiftyday_avg) VALUES ('THD','iShares MSCI Thailand Capped EFT',5099370,89.20,91.24);
+INSERT INTO stockmarket(symbol, stockname, volume, price, fiftyday_avg) VALUES ('MBG','SPDR Bimbg Barclays Mortg Backed Bd ETF',691750,24.97,25.18);
+INSERT INTO stockmarket(symbol, stockname, volume, price, fiftyday_avg) VALUES ('RYU','Invesco S&P 500 Equal Weight Utilits ETF',128840,90.04,88.79);
+INSERT INTO stockmarket(symbol, stockname, volume, price, marketcap) VALUES ('BTC-USD','Bitcoin USD',5648400,6294.07,10898600);
+INSERT INTO stockmarket(symbol, stockname, volume, price, marketcap) VALUES ('XRP-USD','Ripple USD',5853200,0.423,42297000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, marketcap) VALUES ('ETH-USD','Ethereum USD',1807350,204.12,20922000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, marketcap) VALUES ('BCH-USD','Bitcoin Cash USD',42698000,459.82,79620000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, marketcap) VALUES ('XLM-USD','Stellar USD',2680000,0.211,41840000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, marketcap) VALUES ('EOS-USD','EOS USD',4842000,5.42,35400000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, marketcap) VALUES ('LTC-USD','Litecoin USD',22379000,52.56,30840000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, thirtymon_avg) VALUES ('AMD','Advanced Micro Devices Inc',1476830,25.00,11404800);
+INSERT INTO stockmarket(symbol, stockname, volume, price, thirtymon_avg) VALUES ('GE','General Electric Company',9194300,13.28,68450000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, thirtymon_avg) VALUES ('NIO','NIO Inc',7497100,7.75,41815000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, thirtymon_avg) VALUES ('BAC','Bank of America Corporation',8845400,29.24,55465000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, thirtymon_avg) VALUES ('MSFT','Microsoft Corporation',6137600,106.16,25130000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, thirtymon_avg) VALUES ('F','Ford Motor Company',5410400,8.82,41877000);
+INSERT INTO stockmarket(symbol, stockname, volume, price, thirtymon_avg) VALUES ('BABA','Alibaba Group Holding Limited',5582900,138.29,22630000);
+INSERT INTO stockmarket(symbol, stockname, volume, lastprice) VALUES ('GC=F','Gold',48262,1197.10);
+INSERT INTO stockmarket(symbol, stockname, volume, lastprice) VALUES ('ZG=F','Gold 100 oz Dec 18',0,1191.40);
+INSERT INTO stockmarket(symbol, stockname, volume, lastprice) VALUES ('SI=F','Silver',10218,14.30);
+INSERT INTO stockmarket(symbol, stockname, volume, lastprice) VALUES ('ZI=F','Silver 5000 oz Dec 18',0,14.24);
+INSERT INTO stockmarket(symbol, stockname, volume, lastprice) VALUES ('PL=F','Platinum Futures',2778,819.80);
+INSERT INTO stockmarket(symbol, stockname, volume, lastprice) VALUES ('HG=F','Copper Dec 18',26936,2.737);
+INSERT INTO stockmarket(symbol, stockname, volume, lastprice) VALUES ('CL=F','Crude Oil',66644,71.95);
+
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (67763337,'Freja','7538 Beach Dr',40555501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (48699373,'Selin','755 Sherwood St',50255501);
+INSERT INTO dealer(workerid, agentname, address) VALUES (67763337,'Blake','8094 Grove Ave');
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (15983105,'Jake','15 Roberts Rd',61455501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (40707726,'Janae','7959 Atlantic St',90755501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (59848872,'Ashton','8930 Pheasant St',71755501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (36182244,'Eugene','9657 Bellevue Dr',61555501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (40707726,'Jake','9450 Paris Hill St',20755501);
+INSERT INTO dealer(workerid, agentname, address) VALUES (93577044,'Aila','50 Trusel Ave');
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (22111253,'Bryony','78 Mayflower St',51255501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (25076389,'Rico','7665 Bald HillSt',80355501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (40707726,'Blake','721 Beech Ave',30355501);
+INSERT INTO dealer(workerid, agentname, address, phone) VALUES (29860743,'Myron','38 Wilson Ave',60155501);
+
+INSERT INTO customer(customername, accountid, address) VALUES ('Merlin',3855,'7115 King St');
+INSERT INTO customer(customername, accountid, address) VALUES ('Leo',8296,'38 Clark Dr');
+INSERT INTO customer(customername, accountid) VALUES ('Maxine',2832);
+INSERT INTO customer(customername, accountid, address) VALUES ('Scott',6498,'746 Halifax St');
+INSERT INTO customer(customername, accountid, address) VALUES ('Samah',7179,'14W Prairie St');
+INSERT INTO customer(customername, accountid, address) VALUES ('Louis',5580,'89 Center Lane');
+INSERT INTO customer(customername, accountid, address) VALUES ('Hetty',4698,'775 8th Rd');
+INSERT INTO customer(customername, accountid) VALUES ('Samah',1129);
+INSERT INTO customer(customername, accountid, address) VALUES ('Niall',9187,'8526 Taylor St');
+INSERT INTO customer(customername, accountid, address) VALUES ('Montague',3726,'7 Cooper St');
+INSERT INTO customer(customername, accountid, address) VALUES ('Lee',9618,'365 Piper Rd');
+INSERT INTO customer(customername, accountid) VALUES ('Leo',5866);
+INSERT INTO customer(customername, accountid, address) VALUES ('Carlie',5519,'7288 Lafayette St');
+
+INSERT INTO analyst(analystname, expertise) VALUES ('Winter','ETF');
+INSERT INTO analyst(analystname, expertise) VALUES ('Johan','Currencies');
+INSERT INTO analyst(analystname, expertise) VALUES ('Herbert','Commodities');
+INSERT INTO analyst(analystname, expertise) VALUES ('Johan','Cryptocurrencies');
+INSERT INTO analyst(analystname, expertise) VALUES ('Deon','ETF');
+INSERT INTO analyst(analystname, expertise) VALUES ('Toni','Currencies');
+INSERT INTO analyst(analystname, expertise) VALUES ('Dean','Cryptocurrencies');
+INSERT INTO analyst(analystname, expertise) VALUES ('Roisin','Stock');
+INSERT INTO analyst(analystname, expertise) VALUES ('Aran','Currencies');
+INSERT INTO analyst(analystname, expertise) VALUES ('Roisin','ETF');
+INSERT INTO analyst(analystname, expertise) VALUES ('Agata','Cryptocurrencies');
+INSERT INTO analyst(analystname, expertise) VALUES ('Dean','Currencies');
+INSERT INTO analyst(analystname, expertise) VALUES ('Willis','Stock');
+
+INSERT INTO company(companyname, address) VALUES ('Berry Network','976 Rockland Ave');
+INSERT INTO company(companyname, address) VALUES ('Globeworks','8 Stillwater St');
+INSERT INTO company(companyname, address) VALUES ('Ansoft','799S Cypress Rd');
+INSERT INTO company(companyname, address) VALUES ('Pinnaclelectrics','7351 East Rd');
+INSERT INTO company(companyname, address) VALUES ('Purplehut','720 Nichols St');
+INSERT INTO company(companyname, address) VALUES ('Spritebank','63 Shore Rd');
+INSERT INTO company(companyname, address) VALUES ('Webpaw','826 Prince Ave');
+INSERT INTO company(companyname, address) VALUES ('Smart Co','177 Fairview Lane');
+INSERT INTO company(companyname, address) VALUES ('Alpire','852 Prince Ave');
+INSERT INTO company(companyname, address) VALUES ('Seawares','3 Thorne Ave');
+INSERT INTO company(companyname, address) VALUES ('VoidWorth','332 Glenridge Dr');
+INSERT INTO company(companyname, address) VALUES ('Freakshake','9570 Golf Rd');
+INSERT INTO company(companyname, address) VALUES ('Caveland','31 Winchester Lane');
+
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Winter','Global X Gold Explores ETF','GOEX');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Johan','BTC/USD','BTCUSD=X');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Herbert','Gold','GC=F');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Johan','Bitcoin Cash USD','BCH-USD');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Deon','SPDR Bimbg Barclays Mortg Backed Bd ETF','MBG');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Toni','BTC/USD','BTCUSD=X');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Dean','Bitcoin Cash USD','BCH-USD');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Roisin','Advanced Micro Devices Inc','AMD');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Aran','Ripple USD','XRP-USD');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Roisin','Microsoft Corporation','MSFT');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Agata','Copper Dec 18','HG=F');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Dean','Advanced Micro Devices Inc','AMD');
+INSERT INTO focus(analystname, stockname, symbol) VALUES ('Willis','Copper Dec 18','HG=F');
+
+INSERT INTO belong(analystname, companyname) VALUES ('Winter','Globeworks');
+INSERT INTO belong(analystname, companyname) VALUES ('Johan','Ansoft');
+INSERT INTO belong(analystname, companyname) VALUES ('Herbert','Webpaw');
+INSERT INTO belong(analystname, companyname) VALUES ('Zubair','Globeworks');
+INSERT INTO belong(analystname, companyname) VALUES ('Deon','Spritebank');
+INSERT INTO belong(analystname, companyname) VALUES ('Toni','Globeworks');
+INSERT INTO belong(analystname, companyname) VALUES ('Dean','Spritebank');
+INSERT INTO belong(analystname, companyname) VALUES ('Ammar','Caveland');
+INSERT INTO belong(analystname, companyname) VALUES ('Aran','Alpire');
+INSERT INTO belong(analystname, companyname) VALUES ('Roisin','Alpire');
+INSERT INTO belong(analystname, companyname) VALUES ('Agate','Caveland');
+INSERT INTO belong(analystname, companyname) VALUES ('Jeevan','Smart Co');
+INSERT INTO belong(analystname, companyname) VALUES ('Willis','Alpire');
+
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('GNMA','iShares GNMA Bond ETF',36182244,3855);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('CL=F','Crude Oil',48699373,8296);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('GNMA','iShares GNMA Bond ETF',48699373,2832);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('CL=F','Crude Oil','15983105,6498);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('BABA','Alibaba Group Holding Limited',36182244,7179);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('GNMA','iShares GNMA Bond ETF',67763337,5580);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('ETH-USD','Ethereum USD',48699373,4698);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('NZDUSD=X','NZD/USD',25076389,1129);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('EOS-USD','EOS USD','88630508,9187);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('IXIC','NASDAQ',88630508,3726);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('EOS-USD','EOS USD',25076389,9618);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('LTC-USD','Litecoin USD',93577044,5866);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('IXIC','NASDAQ',25076389,6498);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('THD','iShares MSCI Thailand Capped ETF',48699373,3855);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('EURUSD=X','EUR/USD',25076389,9187);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('BABA','Alibaba Group Holding Limited',15983105,5866);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('F','Ford Motor Company',59848872,9618);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('IXIC','NASDAQ',93577044,8296);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('NIO','NIO Inc',15983105,8296);
+INSERT INTO placeorder(symbol, stockname, workerid, accountid) VALUES ('PUI','Invesco DWA Utilities Momentum ETF',22111253,3726);
+
+
+
+
+---- Questions and Answer
+
+-- Phase II includes:
+
+-- ============ Convert your E/R to relations
+
+-- ============ CREATE TABLE's 
+
+-- ============ INSERT data
+
+-- ============ Queris 
+
+ 
+-- ============ 8 simple queries (similar to the examples below)
+--              operators includes (and,or,not) 
+--              patterns
+
+ -- SELECT ... FROM ... WHERE
+
+   -- 1. Find all the stock names 
+	SELECT stockname FROM stockmarket;
+
+   -- 2. Find all the dealer information except his/her phone number is not null 
+	SELECT * FROM dealer WHERE phone is not null;
+
+   -- 3. Find the customer name who named Leo
+	SELECT customername FROM customer WHERE customername = 'Leo';
+
+   -- 4. Find the analyst who's expertise field is ETF
+	SELECT analystname FROM analyst WHERE expertise = 'ETF';
+
+   -- 5. Find the company which located near prince ave.
+	SELECT companyname FROM company WHERE address LIKE '%Princce Ave%';
+
+   -- 6. Find analyst name Johan and his focus
+	SELECT * FROM focus WHERE analystname = 'Johan';
+
+   -- 7. List all the analyst who is working at company Spritebank
+	SELECT analystname FROM belong WHERE companyname = 'Sritebank';
+
+   -- 8. List which account purchase NASDAQ
+	SELECT accountid FROM placeorder WHERE stockname = 'NASDAQ';
+
+
+ -- ============= 6 Multirelation queries (two or more relations  
+ --                                        in the FROM-clause)
+ -- (similar to the examples below) 
+
+   -- 9. List all the stock that customers have been purchased
+	SELECT customername, stockname FROM customer, placeorder WHERE customer.accountid = placeorder.accountid;
+
+   -- 10. Find all the dealer's name and all the stocks that they help customers to place an order
+	SELECT agentname, stockname FROM dealer, placeorder WHERE dealer.workerid = placeorder.workerid;
+	
+
+   -- using operators and or not
+
+   -- 11. Find analyst and his/her expertise who work at Alpire
+	SELECT analyst.analystname, expertise FROM belong, analyst WHERE belong.analystname = analyst.analystname AND companyname = 'Alpire';
+
+   -- 12. Find the stock information that customer Lee has been purchased
+	SELECT stockmarket.symbol, stockmarket.stockname, volume, price, lastprice, fiftyday_avg, marketcap, thirtymon_avg  FROM stockmarket, customer, placeorder WHERE placeorder.stockname = stockmarket.stockname AND customer.customername = 'Lee' AND customer.accountid = placeorder.accountid; 
+
+   -- 13.Find the analyst name and who is focus on stock symbol AMD and his/her company
+	SELECT belong.analystname, companyname FROM focus, belong WHERE symbol = 'AMD' AND focus.analystname = belong.analystname;
+
+   -- 14. List the stock information that analyst Johan is looking at
+	SELECT stockmarket.symbol, stockmarket.stockname, volume, price, lastprice, fiftyday_avg, marketcap, thirtymon_avg FROM stockmarket, focus WHERE stockmarket.stockname = focus.stockname AND analystname = 'Johan';
+
+ -- ============= 6 Subqueries like below
+
+   -- FROM (subquery)
+
+   --15. What kind of stock does account id 5866 has been purchased
+	SELECT * FROM stockmarket, (SELECT symbol FROM placeorder WHERE accountid = 5866) user WHERE stockmarket.symbol = user.symbol;
+
+
+   -- WHERE in (subquery)
+   --16. Find analyst Dean focus on which stock name 
+	SELECT stockname FROM stockmarket WHERE stockmarket.symbol IN (SELECT focus.symbol FROM focus WHERE analystname = 'Dean';
+
+   --17. Find all the stock name and their information that all the customer have been purchased
+	SELECT * FROM stockmarket WHERE EXISTS (SELECT * FROM placeorder WHERE stockmarket.symbol = placeorder.symbol);
+
+   --18. Find any stock price that is greater than customer purchased
+	SELECT * FROM stockmarket WHERE price >= ANY(SELECT price FROM customer, placeorder WHERE placeorder.accountid = customer.accountid);
+
+   --19. Find the stock name and its price that it is higher or equal than the minimum price of account id 3726 has been purchased
+	SELECT stockname, price FROM stockmarket WHERE price >= ALL(SELECT min(price) FROM placeorder, stockmarket WHERE placeorder.symbol = stockmarket.symbol AND accountid = 3726);
+
+   --20. Find the customer who have purchased stock in the customer table
+	SELECT DISTINCT s1.accountid FROM placeorder s1 WHERE s1.accountid IN (SELECT s2.accountid FROM customer s2);
+--=============================================================
+
+ -- ===============  5 SQL-statements using union, intersect, difference (except) 
+
+   -- 21. Find account id 8296 and 9187 purchased what kind of stock 
+	SELECT s1.stockname FROM placeorder s1 WHERE s1.accountid = 8296 UNION SELECT s2.stockname FROM placeorder s2 WHERE s2.accountid = 9187;
+   -- 22. Find the account id who purchased both stock symbol GNMA and NIO
+	SELECT s1.accountid FROM placeorder s1 WHERE symbol = 'NIO' INTERSECT SELECT s2.accountid FROM placeorder s2 WHERE symbol = 'GNMA';
+   -- 23. Find the analyst name who is good at ETF but do not focus on Currencies
+	SELECT s1.analystname FROM analyst s1 WHERE s1.expertise = 'ETF' EXCEPT SELECT s2.analystname FROM analyst s2 WHERE s2.expertise = 'Currencies';
+   -- 24. Find all the data which is unknown or null from customer and dealer
+	SELECT customername FROM customer WHERE address = 'unknown' UNION SELECT agentname FROM dealer WHERE phone IS NULL;
+   -- 25. Find the analyst name from company Caveland and Spritebank 
+	SELECT * FROM belong WHERE companyname = 'Caveland' UNION SELECT analystname FROM belong WHERE companyname = 'Spritebank';
+
+
+  -- ===============5 SQL-statements using Join ==================================
+   -- using CROSS JOIN, NATURAL JOIN, THETA JOIN (INNER JOIN)
+   -- 26. List all the customer's purchased list
+	SELECT customername, symnbol, stockname FROM placeorder NATURAL JOIN customer order by customername; 
+
+   -- 27. Find the analyst name and his/her company information
+	SELECT * FROM belong JOIN company ON belong.companyname = company.companyname order by companyname;
+
+   -- 28. Find the analystname and his/her expertise field moreover his/her focus certain stock name 
+	SELECT analyst.analystname, expertise, symbol, stockname FROM analyst JOIN focus ON analyst.analystname = focuse.analystname order by focus.analystname;
+
+   -- 29. Find all the stock price that are greater than 100 which customer had been purchased
+	SELECT placeorder.stockname, price FROM placeorder NATURAL JOIN stockmarket WHERE price >= 100;
+
+   -- 30. Find each dealer help which customer to place an order
+	SELECT workers, placeorder.accountid FROM placeorder CROSS JOIN customer WHERE placeorder.accountid = customer.accountid order by workerid;
+
+
+
+   -- =============================== OUTER JOIN
+   -- using LEFT, RIGHT, FULL OUTER JOIN
+   -- 26. List all stock information and which stock has been purchased
+	SELECT * FROM stockmarket NATURAL LEFT OUTER JOIN placeorder;
+
+   -- 27. List all stock information and which stock is analyst focus on
+	SELECT * FROM focus NATURAL RIGHT OUTER JOIN stockmarket;
+
+   -- 28. List all analyst and his/her expertise and focus
+	SELECT focus.analystname, focus.symbol, focus.stockname FROM focus FULL OUTER JOIN analyst ON focus.analystname = analyst.analystname;
+
+   -- 29. List analyst and his/her company information
+	SELECT * FROM belong NATURAL RIGHT OUTER JOIN company;
+
+   -- 30. Find all the connection between dealer and customer 
+ 	SELECT * FROM placeorder FULL OUTER JOIN customer ON placeorder.accountid = customer.accountid;
+
+ 
+-- ============================== Aggregate Functions 
+   -- MAX, MIN, SUM, AVG, COUNT
+
+   -- using GROUP BY
+
+   -- using HAVING
+
+   -- 31. Show the stockname and maximum value of price in stock market
+	SELECT stockname, MAX(price) FROM stockmarket GROUP BY(stockname);
+   -- 32. Show the stockname and minimum value of marketcap in stock market
+	SELECT stockname, MIN(marketcap) FROM stockmarket GROUP BY(stockname);
+   -- 33. Show the stockname and sum of all stockmarket's value
+	SELECT stockname, SUM(volume) FROM stockmarket GROUP BY(stockname);
+   -- 34. Show the stockname and average value of price in the stockmarket when any symbol name contain 'USD'
+	SELECT stockname,AVG(price) FROM stockmarket group by(stockname) having count(stockname) >= 10 or stockname IN (SELECT s1.stockname FROM stockmarket s1 WHERE symbol LIKE '%USD');
+   -- 35. Show how many stockname its symbol contain 'USD' in the stockmarket
+	SELECT COUNT(symbol) FROM stockmarket WHERE symbol LIKE '%USD%';
+   
+
+ -- ============================== Database Modification =============================
+
+   -- 36. Insert new analyst data who name is Perry and his expertise is Commodities
+	INSERT INTO analyst(analystname, expertise) VALUES ('Perry', 'Commodities');
+  
+   -- 37. Insert into customers table with potential customers where his/her name is not 'Johan' 
+	INSERT INTO customer(SELECT S2.analystname FROM analyst s1, analyst s2 WHERE s1.analystname = 'Johan' AND s2.analystname <> 'Johan'); 
+   -- 38. Delete the customer data who's name is Winter
+	DELETE FROM customer WHERE customername = 'Winter';
+  
+   -- 39. Delete all the stock information where symbol = 'JPY=X';
+	DELETE FROM stockmarket WHERE symbol = 'JPY=X';
+
+   -- 40. Update new customer account id = 1123 who's name is Herbert
+	UPDATE customer SET accountid = 1123 WHERE customername = 'Herbert';
+
+   -- 41. Update company new address where its name is Berry Network 
+  	UPDATE company SET address = '666 Red Wolf Rd' WHERE companyname = 'Berry Network';
+
+ -- ============================== View =============================
+   -- 42. create a view for customer which account id = 3855 and named as id3855; list all the stock that he purchased
+	CREATE VIEW id3855 AS SELECT stockname FROM placeorder WHERE accountid = 3855;
+	-- print out the view
+	SELECT * FROM id3855;
+
+ -- ============================== PSM =============================
+   -- 43. trigger for id3855 if customer want to insert some new purchased item
+	CREATE TRIGGER VIEWID3855
+		INSTEAD OF INSERT ON id3855
+		REFERENCING NEW ROW AS n
+		FOR EACH ROW
+		BEGIN
+			INSERT INTO placeorder(symbol, stockname, workid, accountid) VALUES (n.symbol, n.stockname, n.workid, n.accountid);
+		END;
+
+   -- 44. PSM for new company
+	CREATE PROCEDURE companylist(
+		IN b VARCHAR(40),
+		IN p VARCHAR(40)
+	)
+	INSERT INTO company VALUES(b,p);
+
+ -- ============================== Constraints =============================
+   -- 45. Re-do your CREATE TABLE to have the constraints (at least one for each kind of constraints below)
+   -- primary key
+   -- foreign key
+   -- attribute constraint
+   -- tuple constraint
+   -- Create another table named: potential, inside this table may contain potential customers
+	CREATE TABLE potential(
+	customername VARCHAR(40),
+	accountid INT CHECK (accountid > 1000 OR accountid <= 9999),
+	CHECK (customername <> 'Kevin'),
+	FOREIGN KEY(accountid) REFERENCES customer(accountid),
+	PRIMARY KEY(accountid)
+	);
+	
+
+-- =============================== relational algebra
+   --46. one relational algebra for finding analyst Johan and his expertise
+	Johaninfo := σ_(analystname="Johan")(analyst)
+   --47. one relational algebra tree for finding analyst Johan and his expertise
+		π_analystname
+		      |
+		σ_(analystname="Johan")www
+		      |
+		   analyst	
+   --48. functional dependencies for each table
+	--table stockmarket functional dependencies
+		stockname -> symbol
+		stockname -> volume
+		stockname -> price
+		stockname -> lastprice
+		stockname -> fiftyday_avg
+		stockname -> marketcap
+		stockname -> thirtymon_avg
+	--table dealer functional dependencies
+		agentname -> workerid
+		agentname -> address
+		agentname -> phone
+	--table customer functional dependencies
+		customername -> accountid
+		customername -> address
+	--table analyst functional dependencies
+		analystname -> expertise
+	--table company functional dependencies
+		companyname -> address
+	--table focus functional dependencies
+		analystname -> symbol
+		stockname
+	--table belong functional dependencies
+		companyname -> analystname
+	--table placeorder functional dependencies
+		stockname -> symbol
+		workerid -> accountid
+   --49. Indicate 3NF or BCNF or 4NF for each table
+	--table stockmarket is in BCNF, since stockname is the only key
+	--table dealer is in BCNF, since agentname is the only key
+	--table customer is in BCNF, since customername is the only key
+	--table analyst is in BCNF, since analystname is the only key
+	--table company is in BCNF, since companyname is the only key
+	--table focus is not in BCNF, since stockname and analystname are the keys
+	  so, we divide into two tables, table 1(analystname,symbol)
+					table 2(stockname,analystname)
+	--table belong is in BCNF, since analystname is the only key
+	--table placeorder is not in BCNF, since stockname and workerid are the keys
+	  so, we divide into separate tables, table 1(stockname, symbol)
+					      table 2(stockname, workerid, accountid)
+					      table 2.1(workerid, accountid)
+					      table 2.2(stockname, workerid)
+
+   --50. One simple interface to access your data from class machine. (An example will be provided.)
+
+
+ 
+
+
+
+
